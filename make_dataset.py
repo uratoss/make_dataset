@@ -23,20 +23,22 @@ if __name__ == '__main__':
         parsed = parse(normalized)
         mkvocab('\n'.join(parsed),vocab,rvocab)
 
-        shifted = []
+        xs = []
+        ts = []
         head = '<bot>'
         for sq in parsed:
-            shifted.append(head +' '+ sq)
+            xs.append(head +' '+ sq)
+            ts.append(' '.join(xs[-1].split()[1:]+['<eos> ']))
             head = ' '.join(sq.split()[-2:])
-        print(shifted)
-        data = ' <eos> \n'.join(shifted)
+        ts[-1] = ts[-1].replace('<eos>','<eot>')
+        xs = '\n'.join(xs)
+        ts = '\n'.join(ts)
 
         #embeded = []
         #for sq in parsed:
         #    embeded.append([ vocab[word] for word in sq.split()])
         #embeded = np.array(embeded)
         #print(embeded.shape)
-    print(data)
     with open('vocab.txt','w') as f:
         print('\n'.join(vocab),file=f)
     with open('vocab.dump','wb') as f:
@@ -46,5 +48,8 @@ if __name__ == '__main__':
 
     out_path = os.path.join(args.out_path,'xs.txt')
     with open(out_path,'w') as f:
-        print(data,file=f)
+        print(xs,file=f)
+    out_path = os.path.join(args.out_path,'ts.txt')
+    with open(out_path,'w') as f:
+        print(ts,file=f)
 
