@@ -2,7 +2,7 @@
 - change `theyarecats` to `they are cats` 
 
 ## ./make_native.py
-- change `theyarecat` to `they are cat` 
+- change `theyarecats` to `they are cat` 
 
 ## ./mkvocab.py
 - make dictionary

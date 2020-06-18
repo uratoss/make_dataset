@@ -1,39 +1,31 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
 import sys
 import pickle
+import argparse
 
-rvocab = {}
-vocab = {}
-
-def load_data(filename):
-  global vocab
-  words = open(filename).read().replace('\n', '<eos> ').strip().split()
-  for i, word in enumerate(words):
-    if word not in vocab:
-      vocab[word] = len(vocab)
-      rvocab[vocab[word]]=word
-
-def main(argv):
-
-  if(len(argv)<2):
-    print("python mkvocab.py file...")
-    sys.exit(0)
-
-  for i in range(1,len(argv)):
-    load_data(argv[i])
-  vocab['<unk>'] = len(vocab)
-  rvocab[vocab['<unk>']]='<unk>'
-  with open('vocab.txt','w') as output:
-    for ys in vocab:
-      print(ys,end='\n',file=output)
-  with open('vocab.dump','wb') as output:
-    pickle.dump(vocab,output)
-  with open('rvocab.dump','wb') as output:
-    pickle.dump(rvocab,output)
+def mkvocab(text,vocab,rvocab):
+    for word in set(text.replace('\n',' <eos> ').split()):
+        if word not in vocab:
+            vocab[word] = len(vocab)
+            rvocab[vocab[word]]=word
+    return vocab,rvocab
 
 
 if __name__ == '__main__':
-  argv = sys.argv
-  main(argv)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f','--files',help='files that you want to add vocabuary', nargs='*', required=True)
+    args = parser.parse_args() 
+
+    print(args.files)
+
+    vocab = {}
+    rvocab = {}
+    for file in args.files:
+        mkvocab(open(file).read(),vocab,rvocab)
+    with open('vocab.txt','w') as f:
+        print('\n'.join(vocab),file=f)
+    with open('vocab.dump','wb') as f:
+        pickle.dump(vocab,f)
+    with open('rvocab.dump','wb') as f:
+        pickle.dump(rvocab,f)
