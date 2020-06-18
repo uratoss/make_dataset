@@ -17,8 +17,6 @@ if __name__ == '__main__':
     parser.add_argument('-f','--files',help='files that you want to add vocabuary', nargs='*', required=True)
     args = parser.parse_args() 
 
-    print(args.files)
-
     vocab = {}
     rvocab = {}
     for file in args.files:
