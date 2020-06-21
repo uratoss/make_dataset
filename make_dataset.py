@@ -18,27 +18,29 @@ if __name__ == '__main__':
 
     vocab = {}
     rvocab = {}
+    xs = []
+    ts = []
     for file in args.files:
         normalized = neologdn.normalize(open(file).read())
         parsed = parse(normalized)
         mkvocab('\n'.join(parsed),vocab,rvocab)
 
-        xs = []
-        ts = []
         head = '<bot>'
         for sq in parsed:
             xs.append(head +' '+ sq)
             ts.append(' '.join(xs[-1].split()[1:]+['<eos> ']))
             head = ' '.join(sq.split()[-2:])
         ts[-1] = ts[-1].replace('<eos>','<eot>')
-        xs = '\n'.join(xs)
-        ts = '\n'.join(ts)
 
-        #embeded = []
-        #for sq in parsed:
-        #    embeded.append([ vocab[word] for word in sq.split()])
-        #embeded = np.array(embeded)
-        #print(embeded.shape)
+    vocab['<bot>'] = len(vocab)
+    rvocab[vocab['<bot>']]='<bot>'
+    vocab['<eot>'] = len(vocab)
+    rvocab[vocab['<eot>']]='<eot>'
+    vocab['<eos>'] = len(vocab)
+    rvocab[vocab['<eos>']]='<eos>'
+
+    xs = '\n'.join(xs)
+    ts = '\n'.join(ts)
     with open('vocab.txt','w') as f:
         print('\n'.join(vocab),file=f)
     with open('vocab.dump','wb') as f:
@@ -46,10 +48,10 @@ if __name__ == '__main__':
     with open('rvocab.dump','wb') as f:
         pickle.dump(rvocab,f)
 
-    out_path = os.path.join(args.out_path,'xs.txt')
+    out_path = os.path.join(args.out_path,'x.txt')
     with open(out_path,'w') as f:
         print(xs,file=f)
-    out_path = os.path.join(args.out_path,'ts.txt')
+    out_path = os.path.join(args.out_path,'t.txt')
     with open(out_path,'w') as f:
         print(ts,file=f)
 
