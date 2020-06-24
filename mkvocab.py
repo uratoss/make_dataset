@@ -5,7 +5,7 @@ import pickle
 import argparse
 
 def mkvocab(text,vocab,rvocab):
-    for word in set(text.replace('\n',' <eos> ').split()):
+    for word in set(text.replace('\n',' ').split()):
         if word not in vocab:
             vocab[word] = len(vocab)
             rvocab[vocab[word]]=word

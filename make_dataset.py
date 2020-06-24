@@ -20,10 +20,9 @@ if __name__ == '__main__':
     rvocab = {}
     xs = []
     ts = []
-    for file in args.files:
-        normalized = neologdn.normalize(open(file).read())
+    for files in args.files:
+        normalized = neologdn.normalize(open(files).read())
         parsed = parse(normalized)
-        mkvocab('\n'.join(parsed),vocab,rvocab)
 
         head = '<bot>'
         for sq in parsed:
@@ -32,15 +31,11 @@ if __name__ == '__main__':
             head = ' '.join(sq.split()[-2:])
         ts[-1] = ts[-1].replace('<eos>','<eot>')
 
-    vocab['<bot>'] = len(vocab)
-    rvocab[vocab['<bot>']]='<bot>'
-    vocab['<eot>'] = len(vocab)
-    rvocab[vocab['<eot>']]='<eot>'
-    vocab['<eos>'] = len(vocab)
-    rvocab[vocab['<eos>']]='<eos>'
-
     xs = '\n'.join(xs)
     ts = '\n'.join(ts)
+    mkvocab(xs,vocab,rvocab)
+    mkvocab(ts,vocab,rvocab)
+
     with open('vocab.txt','w') as f:
         print('\n'.join(vocab),file=f)
     with open('vocab.dump','wb') as f:
