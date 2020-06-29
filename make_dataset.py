@@ -16,20 +16,20 @@ if __name__ == '__main__':
     parser.add_argument('-o','--out_path',default='./',help='output path of precessed file')
     args = parser.parse_args()
 
-    vocab = {}
-    rvocab = {}
+    vocab = {'<PAD>':0}
+    rvocab = {0:'<PAD>'}
     xs = []
     ts = []
     for files in args.files:
         normalized = neologdn.normalize(open(files).read())
         parsed = parse(normalized)
 
-        head = '<bot>'
+        head = '<BOT>'
         for sq in parsed:
             xs.append(head +' '+ sq)
-            ts.append(' '.join(xs[-1].split()[1:]+['<eos> ']))
-            head = ' '.join(sq.split()[-2:])
-        ts[-1] = ts[-1].replace('<eos>','<eot>')
+            ts.append(' '.join(xs[-1].split()[1:]+['<EOS> ']))
+            head = ' '.join(sq.split()[-3:])
+        ts[-1] = ts[-1].replace('<EOS>','<EOT>')
 
     xs = '\n'.join(xs)
     ts = '\n'.join(ts)
