@@ -24,13 +24,16 @@ if __name__ == '__main__':
         normalized = neologdn.normalize(open(files).read())
         parsed = parse(normalized,mode='b')
 
-        head = '<BOT>'
+        head = ['<BOT>']
+        half_len = 1
         for sq in parsed:
-            xs.append(head +' '+ sq)
-            ts.append(' '.join(xs[-1].split()[1:]+['<EOS> ']))
+            for i in range(0,half_len):
+                xs.append(' '.join(head[i:]) +' '+ sq)
+                ts.append(' '.join(xs[-1].split()[1:]+['<EOS> ']))
             # 半分ぐらいずらす
             sq_split = sq.split()
-            head = ' '.join(sq_split[-int(len(sq_split)/2):])
+            half_len = int(len(sq_split)/2)
+            head = sq_split[-half_len:]
         ts[-1] = ts[-1].replace('<EOS>','<EOT>')
 
     xs = '\n'.join(xs)
