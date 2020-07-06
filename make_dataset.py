@@ -41,11 +41,14 @@ if __name__ == '__main__':
     mkvocab(xs,vocab,rvocab)
     mkvocab(ts,vocab,rvocab)
 
-    with open('vocab.txt','w') as f:
+    out_path = os.path.join(args.out_path,'vocab.txt')
+    with open(out_path,'w') as f:
         print('\n'.join(vocab),file=f)
-    with open('vocab.dump','wb') as f:
+    out_path = os.path.join(args.out_path,'vocab.dump')
+    with open(out_path,'wb') as f:
         pickle.dump(vocab,f)
-    with open('rvocab.dump','wb') as f:
+    out_path = os.path.join(args.out_path,'rvocab.dump')
+    with open(out_path,'wb') as f:
         pickle.dump(rvocab,f)
 
     out_path = os.path.join(args.out_path,'x.txt')
