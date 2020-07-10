@@ -26,16 +26,21 @@ if __name__ == '__main__':
 
         head = ['<BOT>']
         half_len = 1
-        for sq in parsed:
-            for i in range(0,half_len):
-                xs.append(' '.join(head[i:]) +' '+ sq)
-                ts.append(' '.join(xs[-1].split()[1:]+['<EOS> ']))
+        for i in range(len(parsed)):
+            sq = parsed[i]
+            #for i in range(0,half_len):
+            for j in range(0,1):
+                xs.append(' '.join(head[j:]) +' '+ sq)
+                if i+1 > len(parsed)-1:
+                    end_str =  ['<EOT> ']
+                else:
+                    # if you want <EOS>,you should change this!
+                    end_str = [parsed[i+1].split()[0],' ']
+                ts.append(' '.join(xs[-1].split()[1:]+end_str))
             # 半分ぐらいずらす
             sq_split = sq.split()
             half_len = int(len(sq_split)/2)
             head = sq_split[-half_len:]
-        ts[-1] = ts[-1].replace('<EOS>','<EOT>')
-
     xs = '\n'.join(xs)
     ts = '\n'.join(ts)
     mkvocab(xs,vocab,rvocab)
