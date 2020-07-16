@@ -1,0 +1,4 @@
+cabocha-python==0.69.1
+mecab-python3==1.0.1
+neologdn==0.4
+unidic-lite==1.0.6
