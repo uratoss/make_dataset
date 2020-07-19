@@ -11,7 +11,6 @@ from mkvocab import mkvocab
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    #parser.add_argument('text_path',help ='text path that you want to processing')
     parser.add_argument('files',help='files that you want to add vocabuary', nargs='*')
     parser.add_argument('-o','--out_path',default='./',help='output path of precessed file')
     args = parser.parse_args()
@@ -28,8 +27,8 @@ if __name__ == '__main__':
         half_len = 1
         for i in range(len(parsed)):
             sq = parsed[i]
-            #for i in range(0,half_len):
-            for j in range(0,1):
+            # 0 ~ half_len
+            for j in range(0,3):
                 xs.append(' '.join(head[j:]) +' '+ sq)
                 if i+1 > len(parsed)-1:
                     end_str =  ['<EOT> ']
