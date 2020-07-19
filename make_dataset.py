@@ -22,7 +22,7 @@ if __name__ == '__main__':
     ts = []
     for files in args.files:
         normalized = neologdn.normalize(open(files).read())
-        parsed = parse(normalized,mode='b')
+        parsed = parse(normalized,mode='morph')
 
         head = ['<BOT>']
         half_len = 1
