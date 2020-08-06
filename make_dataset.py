@@ -29,9 +29,9 @@ if __name__ == '__main__':
             for i in range(len(parsed)-1):
                 xs.append(parsed[i])
                 ts.append(parsed[i+1]+" <EOS>")
-            # for i in range(len(parsed)-5):
-            #     xs.append(parsed[i]+" "+parsed[i+1]+" "+parsed[i+2])
-            #     ts.append(parsed[i+3]+" "+parsed[i+4]+" "+parsed[i+5]+" <EOS>")
+            l = ts[-1].split()
+            l[-1:-1] = ["<EOT>"]
+            ts[-1] = ' '.join(l)
     xs = '\n'.join(xs)
     ts = '\n'.join(ts)
     mkvocab(xs,vocab,rvocab)
