@@ -23,8 +23,8 @@ if __name__ == '__main__':
     for file_paths in args.files:
         files = glob.glob(file_paths)
         for file_name in files:
-            normalizeds = neologdn.normalize(open(file_name).read().replace('\n','')).split("、")
-            parsed = [parse(normalized,mode='morph')[0] for normalized in normalizeds]
+            normalized = neologdn.normalize(open(file_name).read())
+            parsed = parse(normalized,mode='phr')
 
             for i in range(len(parsed)-1):
                 xs.append(parsed[i])
