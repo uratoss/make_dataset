@@ -20,29 +20,31 @@ if __name__ == '__main__':
     rvocab = {0:'<PAD>'}
     xs = []
     ts = []
+    chunk = 1
+    offset = -3
     for file_paths in args.files:
         files = glob.glob(file_paths)
         for file_name in files:
-            normalized = neologdn.normalize(open(file_name).read())
-            parsed = parse(normalized,mode='morph')
+            parsed =[ f.strip() for f in open(file_name).read().replace("\n","").split("<P>")]
 
-            head = ['<BOT>']
-            half_len = 1
+            head = "<BOT>"
             for i in range(len(parsed)):
-                sq = parsed[i]
-                # 0 ~ half_len
-                for j in range(0,5):
-                    xs.append(' '.join(head[j:]) +' '+ sq)
-                    if i+1 > len(parsed)-1:
-                        end_str =  ['<EOT> ']
-                    else:
-                        # if you want <EOS>,you should change this!
-                        end_str = [parsed[i+1].split()[0],' ']
-                    ts.append(' '.join(xs[-1].split()[1:]+end_str))
-                # 半分ぐらいずらす
-                sq_split = sq.split()
-                half_len = int(len(sq_split)/2)
-                head = sq_split[-half_len:]
+                x = head + " "
+                for j in range(chunk):
+                    if i+j > len(parsed)-1:
+                        break
+                    x = x + parsed[i+j] + " "
+                if i+j+1 > len(parsed)-1:
+                    end_str = "<EOT>"
+                else:
+                    end_str = parsed[i+j+1].split()[0].strip()
+                xs.append(x.strip())
+                ts.append((" ".join(x.split()[1:]) + " " + end_str).strip())
+                x_split = parsed[i].split()
+                head = ""
+                for k in range(max(offset,-len(x_split)),0,1):
+                    head = head + x_split[k] + " "
+                head = head.strip()
     xs = '\n'.join(xs)
     ts = '\n'.join(ts)
     mkvocab(xs,vocab,rvocab)
