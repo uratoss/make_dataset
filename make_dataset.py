@@ -20,22 +20,24 @@ if __name__ == '__main__':
     rvocab = {0:'<PAD>'}
     xs = []
     ts = []
-    chunk = 1
+    chunk = 3
     offset = -3
     for file_paths in args.files:
         files = glob.glob(file_paths)
         for file_name in files:
             parsed =[ f.strip() for f in open(file_name).read().replace("\n","").split("<P>")]
 
-            head = "<BOT>"
+            head = "<BOT> "
             for i in range(len(parsed)):
-                x = head + " "
+                x = head
                 for j in range(chunk):
                     if i+j > len(parsed)-1:
                         break
-                    x = x + parsed[i+j] + " "
+                    x =  x + parsed[i+j] + " <P> "
                 if i+j+1 > len(parsed)-1:
-                    end_str = "<EOT>"
+                    x = ' '.join(x.split()[:-1]+["<EOT>"])
+                    # end_str = "<EOT>"
+                    end_str = "<P>"
                 else:
                     end_str = parsed[i+j+1].split()[0].strip()
                 xs.append(x.strip())
@@ -44,7 +46,7 @@ if __name__ == '__main__':
                 head = ""
                 for k in range(max(offset,-len(x_split)),0,1):
                     head = head + x_split[k] + " "
-                head = head.strip()
+                head = head + "<P> "
     xs = '\n'.join(xs)
     ts = '\n'.join(ts)
     mkvocab(xs,vocab,rvocab)
