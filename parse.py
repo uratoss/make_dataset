@@ -34,7 +34,7 @@ def parse(lines, mode="morph"):
                 else:
                     s.append(feature[6])
             sq.append(" ".join(s))
-    elif mode in {"phr"}:
+    elif mode in {"phr", "phr_base"}:
         c = CaboCha.Parser("-f1 -d" + dicdir)
         for line in lines.splitlines():
             if not (line):
@@ -42,7 +42,17 @@ def parse(lines, mode="morph"):
             tree = c.parse(line)
             for i in range(0, tree.size()):
                 token = tree.token(i)
-                text = token.surface if token.chunk else (text + " " + token.surface)
+                if mode == "phr":
+                    text = (
+                        token.surface if token.chunk else (text + " " + token.surface)
+                    )
+                elif mode == "phr_base":
+                    word = (
+                        token.surface
+                        if len(token.feature.split(",")) == 7
+                        else token.feature.split(",")[6]
+                    )
+                    text = word if token.chunk else (text + " " + word)
                 if i == tree.size() - 1 or tree.token(i + 1).chunk:
                     sq.append(text)
     return sq
@@ -50,13 +60,13 @@ def parse(lines, mode="morph"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("text_name", help="text name that you want to processing")
+    parser.add_argument("files", help="files that you want to add vocabuary", nargs="*")
     parser.add_argument(
         "-o", "--out_path", default="./", help="output path of precessed file"
     )
     args = parser.parse_args()
 
-    sq = parse(open(args.text_name).read(), mode="morph")
-    out_path = os.path.join(args.out_path, os.path.basename(args.text_name))
-    with open(out_path, "w") as f:
-        print("\n".join(sq), file=f)
+    for file_name in args.files:
+        sq = parse(open(file_name).read(), mode="morph")
+        with open(os.path.join(args.out_path, os.path.basename(file_name)), "w") as f:
+            print("\n".join(sq), file=f)
