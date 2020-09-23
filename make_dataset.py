@@ -34,14 +34,14 @@ if __name__ == "__main__":
                 x = ""
                 for j in range(chunk):
                     x += parsed[i + j] + " "
-                xs.append(x)
+                xs.append(x.strip())
                 y = ""
                 for j in range(chunk):
                     y += parsed[i + chunk + j] + " "
                 end_str = (
                     "<EOT> <EOS>" if (i + chunk + j + 1) > len(parsed) - 1 else "<EOS>"
                 )
-                ts.append(y + end_str)
+                ts.append((y + end_str).strip())
     xs = "\n".join(xs)
     ts = "\n".join(ts)
     mkvocab(xs, vocab, rvocab)
