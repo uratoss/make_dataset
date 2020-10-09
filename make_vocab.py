@@ -10,7 +10,7 @@ import subprocess
 
 from parse import parse
 
-# class PandasTagger(MeCab.Tagger){{{
+
 class PandasTagger(MeCab.Tagger):
     def __init__(self, option=""):
         super().__init__(option)
@@ -38,8 +38,6 @@ class PandasTagger(MeCab.Tagger):
         return pd.DataFrame(results, columns=self.columns)
 
 
-# }}}
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("files", help="files that you want to add vocabuary", nargs="*")
@@ -57,12 +55,11 @@ if __name__ == "__main__":
     tagger = PandasTagger("-d " + dicdir + ' -U %m"\t"%H,*,*"\n"')
 
     out_dir = args.out_dir
-    if not os.path.exists(out_dir):
-        os.makedirs(out_dir)
+    os.makedirs(out_dir, exist_ok=True)
     base_dir = os.path.join(out_dir, "base")
-    os.makedirs(base_dir)
+    os.makedirs(base_dir, exist_ok=True)
     surf_dir = os.path.join(out_dir, "surf")
-    os.makedirs(surf_dir)
+    os.makedirs(surf_dir, exist_ok=True)
 
     vocab_list = None
     for file_path in args.files:
